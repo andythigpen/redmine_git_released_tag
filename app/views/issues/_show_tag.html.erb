@@ -1,0 +1,8 @@
+<tr>
+  <th><%= l(:field_released_tags) %></th>
+  <td>
+    <% @issue.changesets.each do |c| %>
+      Changeset <%= c.revision %>
+    <% end %>
+  </td>
+</tr>
