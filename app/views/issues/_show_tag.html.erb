@@ -1,8 +1,21 @@
 <tr>
-  <th><%= l(:field_released_tags) %></th>
+  <th><%= l(:field_released_commits) %>:</th>
   <td>
-    <% @issue.changesets.each do |c| %>
-      Changeset <%= c.revision %>
+    <% changesets = [] %>
+    <% @issue.changesets.each do |changeset| %>
+      <% next unless changeset.repository.scm_name == "Git" %>
+      <% tag = `git --git-dir="#{changeset.repository.url}" describe --abbrev=0 --contains #{changeset.format_identifier}`.gsub(/~.*/, '').rstrip %>
+      <% next if tag.empty? %>
+      <%= link_to_revision(changeset, changeset.repository,
+                            :text => "#{changeset.format_identifier}") %>
+      <%= l(:released_in) %>
+      <% tag_rev = `git --git-dir="#{changeset.repository.url}" rev-parse #{tag}`.rstrip %>
+      <%= link_to(
+            h(tag),
+            {:controller => 'repositories', :action => 'show', :id =>           changeset.repository.project, :repository_id => changeset.repository.identifier_param, :rev => tag_rev}) %>
+      <% changesets.push(changeset) %>
+      <br />
     <% end %>
+    <%= "-" if changesets.empty? %>
   </td>
 </tr>

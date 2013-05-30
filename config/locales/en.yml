@@ -1,3 +1,4 @@
 # English strings go here for Rails i18n
 en:
-  field_released_tags: "Released Tags"
+  field_released_commits: "Released Commits"
+  released_in: "released in"
